@@ -20,6 +20,13 @@
         <li class="nav-item">
           <a class="nav-link" href="#">{{ request.user }}</a>
         </li>
+        <li class="nav-item">
+            <a href="{% url 'event' %}" class="nav-link">create event </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'dashboard' %}" class="nav-link">dashboard </a>
+        </li>
         {% endif %}
       </ul>
     </div>

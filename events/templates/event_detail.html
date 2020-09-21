@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Car Detail{% endblock title %}
+
+{% block content %}
+<div style="background-color:#F77948 ; margin: 5%" class="card">
+  <h5 class="card-header">event  Info</h5>
+
+
+	<div  class="card-body">
+	<h5 class="card-title">Title of Event:{{event.title}}</h5>
+	<p class="card-text">	<h1>
+			Description:		{{event.description}}
+			<small>
+			organizer:	{{event.organizer.owner}}
+      location:   {{event.location}}
+      date event:   {{event.date_event}}
+      seats:   {{event.seats}}
+			</small>
+		</h1></p>
+    {% if request.user.is_staff  %}
+
+		<div class="row text-center">
+			<div class="col-md-6">
+					<a href="{% url 'event-update' event.id %}" class="btn btn-dark btn-block">Update</a>
+			</div>
+			<div class="col-md-6">
+					<a href="" class="btn btn-outline-dark btn-block">Delete</a>
+			</div>
+	</div>
+  {% endif %}
+</div>
+</div>
+
+
+
+{% endblock content %}

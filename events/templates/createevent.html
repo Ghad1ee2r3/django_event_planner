@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create{% endblock title %}
+
+{% block content %}
+
+<br>
+<div class="card" style="background-color:#36B5B8 ; margin: 5%">
+  <h5 class="card-header">Create event</h5>
+  <div class="card-body">
+    <p class="card-text">
+        <form action="{% url 'event' %}" method="POST" >
+            {% csrf_token %}
+            {{form|crispy}}
+            <input type="submit" value="Create" class="btn btn-outline-dark">
+        </form>
+    </p>
+  </div>
+</div>
+{% endblock content %}
