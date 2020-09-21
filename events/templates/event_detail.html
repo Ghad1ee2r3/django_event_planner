@@ -18,6 +18,8 @@
       seats:   {{event.seats}}
 			</small>
 		</h1></p>
+
+
     {% if request.user.is_staff  %}
 
 		<div class="row text-center">
@@ -28,8 +30,35 @@
 					<a href="" class="btn btn-outline-dark btn-block">Delete</a>
 			</div>
 	</div>
-  {% endif %}
-</div>
+
+
+
+
+
+<h4>detail of booking users</h4>
+        <table style="width:100%">
+          <tr>
+            <th>user</th>
+            <th>nameEvent</th>
+            <th>ticketnumber</th>
+
+          </tr>
+        {% for booking in list_of_booking %}
+              <tr>
+              <td>{{booking.user}}</td>
+              <td>{{booking.nameEvent}}</td>
+              <td>{{booking.ticketnumber}}</td>
+
+
+              </tr>
+
+        {% endfor %}
+
+        </table>
+        {% endif %}
+      </div>
+
+
 </div>
 
 

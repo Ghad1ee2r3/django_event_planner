@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}profile {% endblock title %}
+
+{% block content %}
+<br>
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card my-card">
+
+
+          <div class="card-body">
+            <h5 class="card-title">{{request.user.username}}</h5>
+            <p class="card-text"></p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center">
+
+            </li>
+          </ul>
+        </div>
+    </div>
+    <div class="card col-6" >list of booking events:
+      <table style="width:100%">
+        <tr>
+          <th>name event</th>
+          <th>user</th>
+          <th>ticket number</th>
+
+        </tr>
+   {% for booking in booking_event %}
+            <tr>
+            <td>{{booking.nameEvent}}</td>
+            <td>{{booking.user}}</td>
+            <td>{{booking.ticketnumber}}</td>
+
+
+            </tr>
+
+   {% endfor %}
+
+      </table>
+
+    </div>
+
+{% endblock content %}

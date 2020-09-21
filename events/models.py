@@ -21,6 +21,19 @@ class Event(models.Model):
     location=models.CharField(max_length=150)
     seats=models.IntegerField()
 
+    def __str__(self):
+        return self.title
+
+class BookingEvent(models.Model):
+    #"""docstring for BookingEvent."""
+    user=models.ForeignKey(User, on_delete=models.CASCADE ,default=1 )
+    nameEvent = models.CharField(max_length=120)
+    ticketnumber=models.IntegerField()
+    #def __init__(self, arg):
+    #    super(BookingEvent, self).__init__()
+    #    self.arg = arg
+
+
 
 
 
@@ -28,4 +41,4 @@ class Event(models.Model):
 
 
     def __str__(self):
-        return self.title
+        return self.nameEvent

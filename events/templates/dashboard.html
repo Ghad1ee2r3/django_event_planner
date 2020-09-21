@@ -3,7 +3,11 @@
 {% block title %}dashbord {% endblock title %}
 
 {% block content %}
-<div >
+<div style="padding-top: 75px;">
+	<form action="{% url 'dashboard' %}" method="GET">
+    <input type="text" name='q' placeholder="Search here...">
+    <input type="submit" value="Search">
+</form>
 </div>
 
 <div class="row">

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Event , Dashboard
+from .models import Event , Dashboard ,BookingEvent
 
 class UserSignup(forms.ModelForm):
     class Meta:
@@ -23,6 +23,12 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         exclude = ['organizer',]
+        #fields = '__all__'
+
+class BookingEventForm(forms.ModelForm):
+    class Meta:
+        model = BookingEvent
+        exclude = ['user',]
         #fields = '__all__'
 
 

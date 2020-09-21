@@ -15,10 +15,17 @@
         </li>
         {% else %}
         <li class="nav-item">
+          <a class="nav-link" href="{% url 'booking-event' %}">booking</a>
+        </li>
+
+        <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">{{ request.user }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profile-user' %}">profile</a>
         </li>
         <li class="nav-item">
             <a href="{% url 'event' %}" class="nav-link">create event </a>
