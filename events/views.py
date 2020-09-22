@@ -1,26 +1,55 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from .forms import UserSignup, UserLogin ,EventForm , BookingEventForm
+from .forms import UserSignup, UserLogin ,EventForm , BookingEventForm ,UserForm
 from django.contrib import messages
-from .models import Event , Dashboard ,BookingEvent
+from .models import Event ,BookingEvent
 from .permissions import owner
 from datetime import date
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 
+##########################################API#################
+from .serializers import  ListEventSerializer , CreateEventSerializer , RigesterSerializer
+from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView, CreateAPIView
+from rest_framework.permissions import  IsAuthenticated, IsAdminUser ,AllowAny
+from rest_framework.filters import OrderingFilter ,SearchFilter
 
 
+class Rigester(CreateAPIView):
+    serializer_class = RigesterSerializer
+
+
+class EventListView(ListAPIView): # list upcoming event
+    queryset = Event.objects.filter(date_event__gt=date.today())
+    serializer_class = ListEventSerializer
+    filter_backends = [SearchFilter,]
+    search_fields = ['organizer__username',]
+
+
+class EventCreate(CreateAPIView):
+    #permission_classes = [IsAdminUser]
+    serializer_class = CreateEventSerializer
+    def perform_create(self, serializer):
+        serializer.save(organizer=self.request.user)
+
+##########################################END_API#################
 def profile(request):
     username=request.user
-    booking_event=BookingEvent.objects.filter(user=username)
+    #booking_event=BookingEvent.objects.filter(user=username)
+    events=Event.objects.filter(date_event__lt=date.today())
+    booking_event=BookingEvent.objects.filter(user=username )
+    #date=date.today()
+    #,event.date_event__lt==date.today() )
     #date=datetime.now()
     #c="2020-09-09"
     #a=timezone.now
     #current=Memberships.objects.filter(datereturn=d)
 
     context = {
-        #"current": current,
+        "events": events,
+
         "booking_event": booking_event
     }
     return render(request, 'profile.html', context)
@@ -103,7 +132,7 @@ def Dashboard(request):
     query = request.GET.get("q")
     if query:
         event = event.filter(Q(title__icontains=query)|
-            Q(description__icontains=query)|Q(organizer__owner__username__icontains=query)
+            Q(description__icontains=query)|Q(organizer__username__icontains=query)
             ).distinct()
         #event=Dashboard.objects.filter()
     context = {
@@ -119,8 +148,8 @@ def event_create(request):
         if request.method == "POST":
             form = EventForm(request.POST )
             if form.is_valid():
-                #event=form.save(commit=False)
-                #event.organizer=request.user
+                form=form.save(commit=False)
+                form.organizer=request.user
                 form.save()
                 messages.success(request, ' add  success.')
                 return redirect('dashboard')
@@ -139,7 +168,7 @@ def event_detail(request, event_id):
     event = Event.objects.get(id=event_id)
 
     title_event=event.title
-    list_of_booking=BookingEvent.objects.filter(nameEvent=title_event)
+    list_of_booking=BookingEvent.objects.filter(event=event)
     context = {
         "event": event,
         "list_of_booking":list_of_booking,
@@ -150,6 +179,26 @@ def event_detail(request, event_id):
 
 #
 
+def profile_update(request, user_id):
+    #Complete Me
+    user_obj = User.objects.get(id=user_id)
+    form = UserForm(instance=user_obj)
+    if request.method == "POST":
+        form = UserForm(request.POST, instance=user_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile was updated success.')
+            return redirect('profile-user')
+    context = {
+            "user_obj": user_obj,
+            "form":form,
+            }
+    #messages.set_level(request, messages.WARNING)
+
+    #CRITICAL = 50
+    #messages.add_message(request, CRITICAL, 'A serious error occurred.')
+    return render(request, 'profile_update.html', context)
+
 def event_update(request, event_id):
     #Complete Me
     event_obj = Event.objects.get(id=event_id)
@@ -158,7 +207,7 @@ def event_update(request, event_id):
         form = EventForm(request.POST, instance=event_obj)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your car was updated success.')
+            messages.success(request, 'Your event was updated success.')
             return redirect('dashboard')
     context = {
             "event_obj": event_obj,
@@ -173,22 +222,59 @@ def event_update(request, event_id):
 def booking_event(request ):
 #    event_obj = Event.objects.get(id=event_id)
 
+
             form = BookingEventForm()
+            #b=0
             if request.method == "POST":
                 form = BookingEventForm(request.POST )
                 if form.is_valid():
                     form=form.save(commit=False)
                     form.user=request.user
-                    form.save()
-                    messages.success(request, ' booking  success.')
+                    event=form.event
+                    if event.seats >= form.ticketnumber:
+                        update_seats=event.seats-form.ticketnumber
+                        event.seats= update_seats
+                        event.save()
+                        form.save()
+                        messages.success(request, ' booking  success.')
+                    else:
+                        messages.success(request, ' This Event is FULL!!')
+
                     return redirect('dashboard')
                 #else:
                 #    messages.success(request, ' not  success.')
             context = {
                     "form":form,
+                    #"a":a
                     }
 
             return render(request, 'booking_event.html', context)
+
+
+
+###################################################################test###########################################3
+#def booking_event_button(request ,event_id):
+#    event_obj = Event.objects.get(id=event_id)
+#    event = Event.objects.get(id=event_id)
+
+#    form = BookingEventForm()
+#    if request.method == "POST":
+#        form = BookingEventForm(request.POST )
+#        if form.is_valid():
+#                    form=form.save(commit=False)
+#                    form.event=event
+#                    form.user=request.user
+#                   form.save()
+#                    messages.success(request, ' booking  success.')
+#                    return redirect('dashboard')
+                #else:
+                #    messages.success(request, ' not  success.')
+#        context = {
+#                    "form":form,
+#                    "event":event ,
+#                    }
+
+        #return render(request, 'booking_event.html', context)
 
 class Logout(View):
     def get(self, request, *args, **kwargs):

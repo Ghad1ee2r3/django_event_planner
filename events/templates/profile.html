@@ -12,7 +12,11 @@
 
           <div class="card-body">
             <h5 class="card-title">{{request.user.username}}</h5>
-            <p class="card-text"></p>
+            <p class="card-text">{{request.user.first_name}}</p>
+
+            <div class="col-md-6">
+      					<a href="{% url 'profile-update' request.user.id %}" class="btn btn-dark btn-block">Update</a>
+      			</div>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item text-center">
@@ -30,15 +34,22 @@
 
         </tr>
    {% for booking in booking_event %}
-            <tr>
-            <td>{{booking.nameEvent}}</td>
-            <td>{{booking.user}}</td>
-            <td>{{booking.ticketnumber}}</td>
+     {% for event in events %}
+          {% if event.title == booking.event.title %}
 
 
-            </tr>
+                <tr>
+                <td>{{booking.event.title}}</td>
+                <td>{{booking.user}}</td>
+                <td>{{booking.ticketnumber}}</td>
 
+
+                </tr>
+
+
+      {% endif %}
    {% endfor %}
+    {% endfor %}
 
       </table>
 

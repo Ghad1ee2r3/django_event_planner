@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Event , Dashboard ,BookingEvent
+from .models import Event  ,BookingEvent
 
 class UserSignup(forms.ModelForm):
     class Meta:
@@ -15,6 +15,11 @@ class UserSignup(forms.ModelForm):
 class UserLogin(forms.Form):
     username = forms.CharField(required=True)
     password = forms.CharField(required=True, widget=forms.PasswordInput())
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name']
 
 
 
@@ -34,7 +39,7 @@ class BookingEventForm(forms.ModelForm):
 
 
 
-class DashboardForm(forms.ModelForm):
-    class Meta:
-        model = Dashboard
-        fields = '__all__'
+#class DashboardForm(forms.ModelForm):
+#    class Meta:
+#        model = Dashboard
+#        fields = '__all__'

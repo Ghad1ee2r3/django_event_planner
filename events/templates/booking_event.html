@@ -10,9 +10,10 @@
   <h5 class="card-header">Booking</h5>
   <div class="card-body">
     <p class="card-text">
-        <form action="{% url 'booking-event' %}" method="POST" >
+        <form action="{% url 'booking-event'  %}" method="POST" >
             {% csrf_token %}
             {{form|crispy}}
+
             <input type="submit" value="Create" class="btn btn-outline-success">
         </form>
     </p>

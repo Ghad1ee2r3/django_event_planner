@@ -12,14 +12,14 @@
 	<p class="card-text">	<h1>
 			Description:		{{event.description}}
 			<small>
-			organizer:	{{event.organizer.owner}}
+			organizer:	{{event.organizer}}
       location:   {{event.location}}
       date event:   {{event.date_event}}
       seats:   {{event.seats}}
 			</small>
 		</h1></p>
 
-
+    
     {% if request.user.is_staff  %}
 
 		<div class="row text-center">
@@ -46,7 +46,7 @@
         {% for booking in list_of_booking %}
               <tr>
               <td>{{booking.user}}</td>
-              <td>{{booking.nameEvent}}</td>
+              <td>{{booking.event.title}}</td>
               <td>{{booking.ticketnumber}}</td>
 
 
