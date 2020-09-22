@@ -24,9 +24,14 @@ urlpatterns = [
     path('profile/<int:user_id>/update/', views.profile_update, name='profile-update'),
 
 	path('profile', views.profile, name='profile-user'),
-	path('login/', TokenObtainPairView.as_view(), name='api-login'),
+	path('login/api/', TokenObtainPairView.as_view(), name='api-login'),
     path('rigester/', api_views.Rigester.as_view(), name='api-register'),
     path('event/create/', api_views.EventCreate.as_view(), name='event-create'),
+	path('api/detail/<int:event_id>/', api_views.EventDetailView.as_view(), name='api-detail'),
+	path('api/update/<int:event_id>/', api_views.EventUpdateView.as_view(), name='api-update'),
+	path('api/bookingevent/', api_views.BookingEventCreate.as_view(), name='api-booking'),
+	#path('listuserbooking/', api_views.EventbookingListView.as_view() , name='api-userbooking'),
+
 
 	#path('list/', EventListView.as_view(), name='list'),
 

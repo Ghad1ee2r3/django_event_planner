@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 
 
 ##########################################API#################
-from .serializers import  ListEventSerializer , CreateEventSerializer , RigesterSerializer
+from .serializers import  ListEventSerializer , CreateEventSerializer , RigesterSerializer , ListBookingEventSerializer , EventDetailSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView, CreateAPIView
 from rest_framework.permissions import  IsAuthenticated, IsAdminUser ,AllowAny
 from rest_framework.filters import OrderingFilter ,SearchFilter
@@ -28,11 +28,58 @@ class EventListView(ListAPIView): # list upcoming event
     search_fields = ['organizer__username',]
 
 
-class EventCreate(CreateAPIView):
+
+#class EventbookingListView(ListAPIView): # list upcoming event
+#    queryset = BookingEvent.objects.filter(user=request.user)
+#    serializer_class = ListBookingEventSerializer
+#    filter_backends = [SearchFilter,]
+#    search_fields = ['user__username',]
+
+
+
+
+class EventDetailView(RetrieveAPIView):# list of user booking this event
+    queryset = Event.objects.all()
+    serializer_class = EventDetailSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'event_id'
+
+    #event = Event.objects.get(id=event_id)
+
+    #title_event=event.title
+    #list_of_booking=BookingEvent.objects.filter(event=event)
+    #permission_classes=[IsStaffOrUser]
+
+
+#class EventListView(ListAPIView): # list upcoming event
+#    queryset = BookingEvent.objects.filter(date_event__gt=date.t
+#    serializer_class = ListEventSerializer
+#    filter_backends = [SearchFilter,]
+#    search_fields = ['organizer__username',]
+class BookingEventCreate(CreateAPIView):# just admin
     #permission_classes = [IsAdminUser]
+    queryset = Event.objects.all()
+    serializer_class = ListBookingEventSerializer
+    #lookup_field = 'id'
+    #lookup_url_kwarg = 'event_id'
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        #serializer.save(event=self.lookup_url_kwarg)
+
+
+class EventCreate(CreateAPIView):# just admin
+    permission_classes = [IsAdminUser]
     serializer_class = CreateEventSerializer
     def perform_create(self, serializer):
         serializer.save(organizer=self.request.user)
+
+
+class EventUpdateView(RetrieveUpdateAPIView):# just admin
+    queryset = Event.objects.all()
+    serializer_class = CreateEventSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'event_id'
+    permission_classes = [IsAdminUser]
 
 ##########################################END_API#################
 def profile(request):
@@ -167,7 +214,7 @@ def event_create(request):
 def event_detail(request, event_id):
     event = Event.objects.get(id=event_id)
 
-    title_event=event.title
+    #title_event=event.title
     list_of_booking=BookingEvent.objects.filter(event=event)
     context = {
         "event": event,
@@ -181,7 +228,7 @@ def event_detail(request, event_id):
 
 def profile_update(request, user_id):
     #Complete Me
-    user_obj = User.objects.get(id=user_id)
+    user_obj = User.objects.get(id=user_id) # change to  request.user to more save
     form = UserForm(instance=user_obj)
     if request.method == "POST":
         form = UserForm(request.POST, instance=user_obj)
@@ -193,31 +240,26 @@ def profile_update(request, user_id):
             "user_obj": user_obj,
             "form":form,
             }
-    #messages.set_level(request, messages.WARNING)
 
-    #CRITICAL = 50
-    #messages.add_message(request, CRITICAL, 'A serious error occurred.')
     return render(request, 'profile_update.html', context)
 
 def event_update(request, event_id):
     #Complete Me
-    event_obj = Event.objects.get(id=event_id)
-    form = EventForm(instance=event_obj)
-    if request.method == "POST":
-        form = EventForm(request.POST, instance=event_obj)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your event was updated success.')
-            return redirect('dashboard')
-    context = {
-            "event_obj": event_obj,
-            "form":form,
-            }
-    #messages.set_level(request, messages.WARNING)
-
-    #CRITICAL = 50
-    #messages.add_message(request, CRITICAL, 'A serious error occurred.')
-    return render(request, 'event_update.html', context)
+    if request.user.is_staff :
+        event_obj = Event.objects.get(id=event_id)
+        form = EventForm(instance=event_obj)
+        if request.method == "POST":
+            form = EventForm(request.POST, instance=event_obj)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your event was updated success.')
+                return redirect('dashboard')
+        context = {
+                "event_obj": event_obj,
+                "form":form,
+                }
+        
+        return render(request, 'event_update.html', context)
 
 def booking_event(request ):
 #    event_obj = Event.objects.get(id=event_id)
