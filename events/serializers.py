@@ -37,18 +37,11 @@ class CreateEventSerializer(serializers.ModelSerializer):
 
 
 class ListBookingEventSerializer(serializers.ModelSerializer):
-     #user = UserSerializer()
-     #event=CreateEventSerializer()
-     #event = serializers.SerializerMethodField()
+
      class Meta:
         model = BookingEvent
         fields = ['event' , 'user' ,'ticketnumber']
-     #def get_event(self, obj):
-    #    event = Event.objects.get(id=obj.id)
 
-        #title_event=event.title
-
-        #return CreateEventSerializer(title_event, many=True).data
 
 class EventDetailSerializer(serializers.ModelSerializer):
     booking_by = serializers.SerializerMethodField()
@@ -60,7 +53,10 @@ class EventDetailSerializer(serializers.ModelSerializer):
     def get_booking_by(self, obj):
         event = Event.objects.get(id=obj.id)
 
+
         title_event=event.title
         list_of_booking=BookingEvent.objects.filter(event=event)
-        #us = BookingEvent.objects.filter(event= Event.title)
-        return UserSerializer(list_of_booking, many=True).data
+    #    for i in list_of_booking:
+        #     user=i.user #one object
+
+        return ListBookingEventSerializer(list_of_booking, many=True).data

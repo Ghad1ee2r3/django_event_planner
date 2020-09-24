@@ -3,44 +3,62 @@
 {% block title %}Car Detail{% endblock title %}
 
 {% block content %}
-<div style="background-color:#F77948 ; margin: 5%" class="card">
-  <h5 class="card-header">event  Info</h5>
+<div style="background-color:#F77948 ; margin: 10%" class="card ">
+  <h5 class="card-header">Title of Event:{{event.title}}</h5>
+      {% if event.img %}
+     <img class="card-img-top" src="{{event.img.url}}" alt="Image, look at ...">
+      {% endif %}
 
 
 	<div  class="card-body">
-	<h5 class="card-title">Title of Event:{{event.title}}</h5>
+	<h5 class="card-title">{{event.title}}</h5>
+
+
+
+  
+
+
+
 	<p class="card-text">	<h1>
-			Description:		{{event.description}}
-			<small>
-			organizer:	{{event.organizer}}
-      location:   {{event.location}}
-      date event:   {{event.date_event}}
-      seats:   {{event.seats}}
-			</small>
+			Description:	<small>	{{event.description}}</small>
+			<br>
+			organizer:<small>	{{event.organizer}}</small>
+      <br>
+      location:  <small> {{event.location}} </small>
+      <br>
+      date event: <small>  {{event.date_event}} </small>
+      <br>
+      seats:  <small> {{event.seats}} </small>
+
 		</h1></p>
 
-    
-    {% if request.user.is_staff  %}
+
+{% if request.user.is_staff  %}
 
 		<div class="row text-center">
-			<div class="col-md-6">
-					<a href="{% url 'event-update' event.id %}" class="btn btn-dark btn-block">Update</a>
+      <div class="col-md-12">
+          <a class="btn btn-dark btn-block" href="{% url 'booking-event'  event.id %}">booking</a>
+        </div>
+
+			<div class="col-md-6" style="margin-top:3%">
+					<a href="{% url 'event-update' event.id %}" class="btn btn-outline-dark btn-block">Update</a>
 			</div>
-			<div class="col-md-6">
-					<a href="" class="btn btn-outline-dark btn-block">Delete</a>
+			<div class="col-md-6"style="margin-top:3%">
+					<a href="{% url 'event-delete' event.id %}" class="btn btn-outline-dark btn-block">Delete</a>
 			</div>
+
 	</div>
 
 
 
+<HR>
 
-
-<h4>detail of booking users</h4>
+<h4 style="margin-top:3%">List of Booking Users:</h4>
         <table style="width:100%">
           <tr>
-            <th>user</th>
-            <th>nameEvent</th>
-            <th>ticketnumber</th>
+            <th>User</th>
+            <th>NameEvent</th>
+            <th>Ticketnumber</th>
 
           </tr>
         {% for booking in list_of_booking %}
@@ -55,12 +73,24 @@
         {% endfor %}
 
         </table>
+
+      {% else %}
+
+
+    <div class="col-md-6">
+        <a class="btn btn-outline-dark btn-block" href="{% url 'booking-event'  event.id %}">booking</a>
+      </div>
+
+
         {% endif %}
       </div>
 
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 
 {% endblock content %}

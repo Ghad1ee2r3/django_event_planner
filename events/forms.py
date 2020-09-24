@@ -33,7 +33,7 @@ class EventForm(forms.ModelForm):
 class BookingEventForm(forms.ModelForm):
     class Meta:
         model = BookingEvent
-        exclude = ['user',]
+        exclude = ['user','event']
         #fields = '__all__'
 
 

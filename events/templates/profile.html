@@ -4,33 +4,68 @@
 
 {% block content %}
 <br>
-<div class="row">
 
-    <div class="col-md-4">
-        <div class="card my-card">
+<!-- Rotating card -->
+<div class="card-wrapper">
+  <div id="card-1" class="card card-rotating text-center">
 
+    <!-- Front Side -->
+    <div class="face front">
 
-          <div class="card-body">
-            <h5 class="card-title">{{request.user.username}}</h5>
-            <p class="card-text">{{request.user.first_name}}</p>
+      <!-- Image-->
 
-            <div class="col-md-6">
-      					<a href="{% url 'profile-update' request.user.id %}" class="btn btn-dark btn-block">Update</a>
-      			</div>
+      <div class="card-up">
+        <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/photo7.jpg" alt="Image with a photo of clouds.">
+      </div>
+
+  {% if request.user.is_staff  %}
+        <div class="card-up">
+        <!--  <img style="width:10% ; height:5%;" class="card-img-top" src="https://lh3.googleusercontent.com/proxy/xQMPS4c-9kS120DWeW0zQZK5QtWN0j9LEWPZjuz0_N-v2cmvGU3wmPX3vqGodoWWvxqDIAqVhu4PIg3QwPzuUy5acJX3cHKTmzxVafV5tYZnASVRUzXuUQxQxlDOU7wHUBnPoh-y4w" alt=".">
+        </div> -->
+
+    {% elif request.user.username == "reenad_" %}
+      <!-- Avatar -->
+      <div class="avatar mx-auto white"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(20).jpg" class="rounded-circle"
+          alt="Sample avatar image.">
+      </div>
+{% endif %}
+      <!-- Content -->
+      <div class="card-body">
+        <h4 class="font-weight-bold mb-3">{{request.user.username}}</h4>
+        <p class="font-weight-bold blue-text">FirstName: {{request.user.first_name}}</p>
+          <p class="font-weight-bold blue-text">LastName: {{request.user.last_name}}</p>
+          <div class="col-md-2"style="margin: 10px;">
+              <a href="{% url 'profile-update'  %}" class="btn btn-dark btn-block">Update Profile</a>
           </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item text-center">
-
-            </li>
-          </ul>
-        </div>
+      </div>
     </div>
-    <div class="card col-6" >list of booking events:
+    <!-- Front Side -->
+
+    <!-- Back Side -->
+    <div class="face back">
+      <div class="card-body">
+
+
+
+      </div>
+    </div>
+    <!-- Back Side -->
+
+  </div>
+</div>
+<!-- Rotating card  end edit -->
+<div class="row"  style="padding-top: 75px; padding-bottom: 75px; margin: 10px;">
+
+
+    <div class="card col-5"style="margin: 10px;" ><h4 style="color:#F77948 ;margin: 5%">List of Previous Booking Events:</h4>
+      <br>
+      <hr>
       <table style="width:100%">
         <tr>
-          <th>name event</th>
-          <th>user</th>
-          <th>ticket number</th>
+          <th>Name event</th>
+          <th>User</th>
+          <th>Ticket number</th>
+          <th>Detaile of event</th>
 
         </tr>
    {% for booking in booking_event %}
@@ -42,6 +77,46 @@
                 <td>{{booking.event.title}}</td>
                 <td>{{booking.user}}</td>
                 <td>{{booking.ticketnumber}}</td>
+                <td>  <li class="list-group-item text-center">
+                      <a href="{% url 'event-detail' event.id %}" class="btn btn-outline-dark">View</a>
+                  </li></td>
+
+
+                </tr>
+
+
+      {% endif %}
+   {% endfor %}
+    {% endfor %}
+
+      </table>
+
+    </div>
+
+
+
+    <div class="card col-5" style="margin: 10px;" ><h4 style="color:#F77948 ;margin: 5%">List of Upcoming  Booking Events:</h4> <br>
+    <hr>
+      <table style="width:100%">
+        <tr>
+          <th>Name event</th>
+          <th>User</th>
+          <th>Ticket number</th>
+          <th>Detaile of event</th>
+
+        </tr>
+   {% for booking in booking_event %}
+     {% for event in eventsupcoming %}
+          {% if event.title == booking.event.title %}
+
+
+                <tr>
+                <td>{{booking.event.title}}</td>
+                <td>{{booking.user}}</td>
+                <td>{{booking.ticketnumber}}</td>
+                <td>  <li class="list-group-item text-center">
+                      <a href="{% url 'event-detail' event.id %}" class="btn btn-outline-dark">View</a>
+                  </li></td>
 
 
                 </tr>

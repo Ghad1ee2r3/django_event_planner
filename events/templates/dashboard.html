@@ -4,10 +4,10 @@
 
 {% block content %}
 <div style="padding-top: 75px;">
-	<form action="{% url 'dashboard' %}" method="GET">
+<!--	<form action="{% url 'dashboard' %}" method="GET">
     <input type="text" name='q' placeholder="Search here...">
     <input type="submit" value="Search">
-</form>
+</form> -->
 </div>
 
 <div class="row">
@@ -17,12 +17,17 @@
 
 	{% for event  in events  %}
 
-	<div  class=" col-12 col-sm-6 col-md-4">
+	<div  class=" col-12 col-sm-6 col-md-4" style="margin-left: 0%; margin-top: 1%, margin-bottom: 2%">
 			<div  style="background-color:#F77948 " class="card my-3">
-
+				{% if event.img %}
+			<img class="card-img-top" src="{{event.img.url}}" alt="Image, look at ...">
+			{% endif %}
 
 						<div class="card-body" >
+
 							  <h5 class="card-title">{{event.title}}</h5>
+
+      <hr>
 		<a >
 			<h1 class="card-text" >
 		  {{event.date_event}}
